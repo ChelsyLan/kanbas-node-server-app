@@ -14,7 +14,10 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: process.env.NETLIFY_URL || "http:/localhost:3000", // support cookies
+    origin: [
+      "http://localhost:3000",
+      "https://prismatic-cobbler-92930a.netlify.app"
+    ]
   })
 );
 const sessionOptions = {
