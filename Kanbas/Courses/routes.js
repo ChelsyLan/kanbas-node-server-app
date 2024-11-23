@@ -8,17 +8,25 @@ export default function CourseRoutes(app) {
     res.send(courses);
   });
 
-  app.delete("api/courses/:courseId", (req, res) => {
+  app.delete("/api/courses/:courseId", (req, res) => {
     const { courseId } = req.params;
     dao.deleteCourse(courseId);
     res.sendStatus(204);
   });
 
   app.put("/api/courses/:courseId", (req, res) => {
-    const { courseId } = req.params;
-    const courseUpdates = req.body;
-    dao.updateCourse(courseId, courseUpdates);
-    res.sendStatus(204);
+    try {
+      const { courseId } = req.params;
+      const courseUpdates = req.body;
+      const updatedCourse = dao.updateCourse(courseId, courseUpdates);
+      if (!updatedCourse) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      res.json(updatedCourse);  // Send back the updated course instead of 204
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: error.message });
+    }
   });
 
   app.post("/api/courses/:courseId/modules", (req, res) => {

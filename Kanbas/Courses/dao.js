@@ -30,8 +30,11 @@ export function deleteCourse(courseId) {
 
 export function updateCourse(courseId, courseUpdates) {
   const { courses } = Database;
-  const course = courses.find((course) => course._id === courseId);
-  Object.assign(course, courseUpdates);
-  return course;
+  const index = courses.findIndex((course) => course._id === courseId);
+  if (index === -1) {
+    return null;
+  }
+  courses[index] = { ...courses[index], ...courseUpdates };
+  return courses[index];
 }
 

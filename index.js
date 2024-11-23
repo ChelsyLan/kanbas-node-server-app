@@ -1,4 +1,5 @@
 import express from "express";
+import bodyParser from "body-parser";
 import Hello from "./Hello.js";
 import Lab5 from "./Lab5/index.js";
 import cors from "cors";
@@ -31,6 +32,8 @@ if (process.env.NODE_ENV !== "development") {
 }
 app.use(session(sessionOptions));
 app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:true}));
 UserRoutes(app);
 CourseRoutes(app);
 ModuleRoutes(app);
