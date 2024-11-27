@@ -17,7 +17,8 @@ app.use(
     credentials: true,
     origin: [
       "http://localhost:3000",
-      "https://prismatic-cobbler-92930a.netlify.app"
+      "https://prismatic-cobbler-92930a.netlify.app",
+      'https://a5-final--prismatic-cobbler-92930a.netlify.app'
     ]
   })
 );
