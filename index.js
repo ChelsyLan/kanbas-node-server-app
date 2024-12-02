@@ -44,13 +44,6 @@ app.use(
   })
 );
 
-// Add request logging middleware
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  console.log("Session:", req.session);
-  console.log("Cookies:", req.headers.cookie);
-  next();
-});
 const sessionOptions = {
   secret: process.env.SESSION_SECRET || "whatever",
   resave: false,
@@ -63,16 +56,18 @@ if (process.env.NODE_ENV !== "development") {
     secure: true,
     domain: process.env.NODE_SERVER_DOMAIN,
   };
-}
-if (process.env.NODE_ENV === "production") {
-  sessionOptions.proxy = true;
-  sessionOptions.cookie = {
-    sameSite: "none",
-    secure: true,
-    domain: process.env.NODE_SERVER_DOMAIN,
-  };
-}
+};
+
 app.use(session(sessionOptions));
+// Add session check middleware
+app.use((req, res, next) => {
+  console.log("Session Check:", {
+    hasSession: !!req.session,
+    sessionID: req.sessionID,
+    cookie: req.session?.cookie
+  });
+  next();
+});
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
