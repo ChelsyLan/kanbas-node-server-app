@@ -19,16 +19,11 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: [
-      "http://localhost:3000",
-      "https://prismatic-cobbler-92930a.netlify.app",
-      'https://a5-final--prismatic-cobbler-92930a.netlify.app',
-      "https://a6--prismatic-cobbler-92930a.netlify.app"
-    ]
+    origin: [""]
   })
 );
 const sessionOptions = {
-  secret: process.env.SESSION_SECRET || "kanbas",
+  secret: process.env.SESSION_SECRET || "whatever",
   resave: false,
   saveUninitialized: false,
 };
@@ -38,6 +33,13 @@ if (process.env.NODE_ENV !== "development") {
     sameSite: "none",
     secure: true,
     domain: process.env.NODE_SERVER_DOMAIN,
+  };
+}
+if (process.env.NODE_ENV === "production") {
+  sessionOptions.proxy = true;
+  sessionOptions.cookie = {
+    sameSite: "none",
+    secure: true,
   };
 }
 app.use(session(sessionOptions));
