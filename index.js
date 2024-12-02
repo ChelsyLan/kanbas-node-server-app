@@ -22,7 +22,8 @@ app.use(
     origin: [
       "http://localhost:3000",
       "https://prismatic-cobbler-92930a.netlify.app",
-      'https://a5-final--prismatic-cobbler-92930a.netlify.app'
+      'https://a5-final--prismatic-cobbler-92930a.netlify.app',
+      "https://a6--prismatic-cobbler-92930a.netlify.app"
     ]
   })
 );
