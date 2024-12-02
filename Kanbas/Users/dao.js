@@ -1,11 +1,6 @@
 import userModel from "./model.js";
 
 // data access object
-export const createUser = (user) => {
-  const newUser = userModel.create(user);
-  return newUser;
-};
-
 
 export const findAllUsers = async() => {
   const users = await userModel.find();
@@ -24,6 +19,9 @@ export const findUsersByPartialName = (partialName) => {
 
 export const updateUser = (userId, user) =>  userModel.updateOne({ _id: userId }, { $set: user });
 export const deleteUser = (userId) => userModel.deleteOne({ _id: userId });
+export const createUser = (user) => {
+  delete user._id;
+  userModel.create(user);}
 
 
 

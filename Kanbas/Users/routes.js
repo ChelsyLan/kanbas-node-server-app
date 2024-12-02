@@ -2,9 +2,8 @@ import * as dao from "./dao.js";
 import * as courseDao from "../Courses/dao.js";
 import * as enrollmentsDao from "../Enrollments/dao.js";
 export default function UserRoutes(app) {
-  const createUser = (req, res) => {
-    const newUser = dao.createUser();
-    req.session["currentUser"] = newUser;
+  const createUser = async(req, res) => {
+    const newUser = await dao.createUser(req.body);
     res.json(newUser);
   };
   const deleteUser = async(req, res) => {
