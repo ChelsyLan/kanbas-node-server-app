@@ -19,7 +19,12 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: [""]
+    origin: [
+      "http://localhost:3000",
+      "https://prismatic-cobbler-92930a.netlify.app",
+      'https://a5-final--prismatic-cobbler-92930a.netlify.app',
+      "https://a6--prismatic-cobbler-92930a.netlify.app"
+    ]
   })
 );
 const sessionOptions = {
@@ -40,6 +45,7 @@ if (process.env.NODE_ENV === "production") {
   sessionOptions.cookie = {
     sameSite: "none",
     secure: true,
+    domain: process.env.NODE_SERVER_DOMAIN,
   };
 }
 app.use(session(sessionOptions));
