@@ -28,10 +28,9 @@ app.use(
   cors({
     credentials: true,
     origin: [
+      'https://a6--prismatic-cobbler-92930a.netlify.app',
       "http://localhost:3000",
       'https://prismatic-cobbler-92930a.netlify.app',
-      'https://a5-final--prismatic-cobbler-92930a.netlify.app',
-      'https://a6--prismatic-cobbler-92930a.netlify.app'
     ]
   })
 );
@@ -47,11 +46,14 @@ if (process.env.NODE_ENV !== "development") {
     sameSite: "none",
     secure: true,
     domain: process.env.NODE_SERVER_DOMAIN,
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
   };
 };
 
+app.options('*', cors());
 app.use(session(sessionOptions));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 UserRoutes(app);
