@@ -14,16 +14,15 @@ import mongoose from "mongoose";
 
 const CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING || "mongodb://localhost:27017/kanbas";
 mongoose.connect(CONNECTION_STRING);
-console.log("Connected to MongoDB");
+mongoose.connect(CONNECTION_STRING)
+  .then(() => {
+    console.log("Successfully connected to MongoDB.");
+    console.log("Database:", mongoose.connection.db.databaseName);
+  })
+  .catch(err => {
+    console.error("MongoDB connection error:", err);
+  });
 const app = express();
-console.log("Environment Variables Check:");
-console.log({
-  NODE_ENV: process.env.NODE_ENV,
-  HAS_SESSION_SECRET: !!process.env.SESSION_SECRET,
-  HAS_MONGO_CONNECTION: !!process.env.MONGO_CONNECTION_STRING,
-  NODE_SERVER_DOMAIN: process.env.NODE_SERVER_DOMAIN
-});
-
 app.use(
   cors({
     credentials: true,
@@ -51,15 +50,6 @@ if (process.env.NODE_ENV !== "development") {
 };
 
 app.use(session(sessionOptions));
-// Add session check middleware
-app.use((req, res, next) => {
-  console.log("Session Check:", {
-    hasSession: !!req.session,
-    sessionID: req.sessionID,
-    cookie: req.session?.cookie
-  });
-  next();
-});
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));

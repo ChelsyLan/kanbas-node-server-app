@@ -6,10 +6,23 @@ export const findAllUsers = async() => {
   const users = await userModel.find();
   return users;
 };
-export const findUserByRole = async(role) =>userModel.find({role:role});
+export const findUserByRole = async (role) =>userModel.find({role:role});
 export const findUserById = (userId) =>userModel.findById(userId);
 export const findUserByUsername = (username) =>  userModel.findOne({ username: username });
-export const findUserByCredentials = async (username, password) => await userModel.findOne({ username, password });
+export const findUserByCredentials = async (username, password) => {
+  try{
+    // check if user exists
+    const userExists = await userModel.findOne({ username });
+    console.log("User exists check:", userExists);
+
+    const user = await userModel.findOne({ username, password });
+    console.log("User with credentials:", user);
+    return user;
+  }catch (error) {
+    console.error("Database error:", error);
+    throw error;
+  }
+};
 export const findUsersByPartialName = (partialName) => {
   const regex = new RegExp(partialName, "i"); // 'i' makes it case-insensitive
   return model.find({
