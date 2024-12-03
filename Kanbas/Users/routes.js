@@ -58,7 +58,6 @@ export default function UserRoutes(app) {
     const { username, password } = req.body;
     const currentUser = await dao.findUserByCredentials(username, password);
     if (currentUser) {
-      req.session["currentUser"] = currentUser;
       req.session.currentUser = currentUser;
       console.log("Session after login: ", req.session);
       res.json(currentUser);
@@ -80,9 +79,10 @@ export default function UserRoutes(app) {
   };
 
   const findCoursesForEnrolledUser = async(req, res) => {
-    const currentUser = req.session["currentUser"];
+    const currentUser = req.session.currentUser;
     if (!currentUser) {
-      console.log("Please signin first");
+      console.log("Please sign in first to find course");
+      console.log("session when finding course",req.session);
       return;
     }
     if (currentUser.role === "ADMIN") {
