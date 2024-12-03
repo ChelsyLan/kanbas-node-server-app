@@ -1,40 +1,43 @@
-import Database from "../Database/index.js";
+
+import courseModel from "./model.js";
+import enrollmentModel from "../Enrollments/model.js";
+import { ObjectId } from "mongodb";
 export function findAllCourses() {
-  return Database.courses;
+  return courseModel.find();
 }
 
-export function findCoursesForEnrolledUser(userId) {
-  const { courses, enrollments } = Database;
-  const enrolledCourses = courses.filter((course) =>
-    enrollments.some(
-      (enrollment) =>
-        enrollment.user === userId && enrollment.course === course._id
-    )
-  );
-  return enrolledCourses;
+export async function findCoursesForEnrolledUser(userId) {
+  const userObjectId = new ObjectId(String(userId));
+  const enrollments = await enrollmentModel.find({ user: userObjectId, status: "ENROLLED" });
+  const courseIds = enrollments.map(enrollment => enrollment.course);
+  const courses = await courseModel.find({ _id: { $in: courseIds } });
+  return courses;
 }
 
 export function createCourse(course) {
-  const newCourse = { ...course, _id: Date.now().toString() };
-  Database.courses = [...Database.courses, newCourse];
-  return newCourse;
+  delete course._id;
+  return courseModel.create(course);
+}
+
+export function findCourseById(courseId) {
+  try {
+    if (!ObjectId.isValid(courseId)) {
+      throw new Error('Invalid course ID format');
+    }
+    const courseObjectId = new ObjectId(courseId);
+    return courseModel.findById(courseObjectId);
+  } catch (error) {
+    throw new Error(`Error finding course: ${error.message}`);
+  }
 }
 
 export function deleteCourse(courseId) {
-  const { courses, enrollments } = Database;
-  Database.courses = courses.filter((course) => course._id !== courseId);
-  Database.enrollments = enrollments.filter(
-    (enrollment) => enrollment.course !== courseId
-  );
+  const courseObjectId = new ObjectId(String(courseId));
+  return courseModel.deleteOne({_id:courseObjectId});
 }
 
 export function updateCourse(courseId, courseUpdates) {
-  const { courses } = Database;
-  const index = courses.findIndex((course) => course._id === courseId);
-  if (index === -1) {
-    return null;
-  }
-  courses[index] = { ...courses[index], ...courseUpdates };
-  return courses[index];
+  const courseObjectId = new ObjectId(String(courseId));
+  return courseModel.updateOne({_id:courseObjectId},{$set:courseUpdates});
 }
 

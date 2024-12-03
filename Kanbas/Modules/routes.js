@@ -1,6 +1,6 @@
 import * as modulesDao from "./dao.js";
 export default function ModuleRoutes(app) {
-  app.put("/api/modules/:moduleId", (req, res) => {
+  app.put("/api/modules/:moduleId",async (req, res) => {
     if (!req.session.currentUser) {
       return res.status(401).json({ message: "Please login first" });
     }
@@ -9,11 +9,11 @@ export default function ModuleRoutes(app) {
     }
     const { moduleId } = req.params;
     const moduleUpdates = req.body;
-    modulesDao.updateModule(moduleId, moduleUpdates);
-    res.sendStatus(204);
+    const status = await modulesDao.updateModule(moduleId, moduleUpdates);
+    res.send(status)
   });
 
-  app.delete("/api/modules/:moduleId", (req, res) => {
+  app.delete("/api/modules/:moduleId",async (req, res) => {
     if (!req.session.currentUser) {
       return res.status(401).json({ message: "Please login first" });
     }
@@ -21,7 +21,7 @@ export default function ModuleRoutes(app) {
       return res.status(403).json({ message: "Students are not authorized to perform this operation" });
     }
     const { moduleId } = req.params;
-    modulesDao.deleteModule(moduleId);
-    res.sendStatus(204);
+    const status = await modulesDao.deleteModule(moduleId);
+    res.send(status)
   });
 }

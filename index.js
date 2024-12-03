@@ -15,8 +15,10 @@ import mongoose from "mongoose";
 const CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING || "mongodb://localhost:27017/kanbas";
 mongoose.connect(CONNECTION_STRING)
   .then(() => {
-    console.log("Successfully connected to MongoDB.",CONNECTION_STRING);
-    console.log("Database:", mongoose.connection.db.databaseName);
+    console.log("Successfully connected to MongoDB.");
+    if (mongoose.connection.db){
+      console.log("Database:", CONNECTION_STRING,mongoose.connection.db.databaseName);
+    }    
   })
   .catch(err => {
     console.error("MongoDB connection error:", err);
