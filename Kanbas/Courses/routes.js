@@ -25,12 +25,6 @@ export default function CourseRoutes(app) {
 
   // create module
   app.post("/api/courses/:courseId/modules", async(req, res) => {
-    if (!req.session.currentUser) {
-      return res.status(401).json({ message: "Please login first" });
-    }
-    if (req.session.currentUser.role === "STUDENT") {
-      return res.status(403).json({ message: "Students are not authorized to perform this operation" });
-    }
     const {courseId} = req.params;
     const course = await dao.findCourseById(courseId);
     const module = { ...req.body, course: course._id };
@@ -46,12 +40,7 @@ export default function CourseRoutes(app) {
 
   // create assignment
   app.post("/api/courses/:courseId/assignments", async (req, res) => {
-    if (!req.session.currentUser) {
-      return res.status(401).json({ message: "Please login first" });
-    }
-    if (req.session.currentUser.role === "STUDENT") {
-      return res.status(403).json({ message: "Students are not authorized to perform this operation" });
-    }
+    console.log("session when create assignment",req.session);
     const {courseId} = req.params;
     const courseObjectId = new ObjectId(String(courseId));
     const assignment = { ...req.body, course: courseObjectId };
