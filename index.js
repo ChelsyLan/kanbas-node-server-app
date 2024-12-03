@@ -27,20 +27,12 @@ console.log({
 app.use(
   cors({
     credentials: true,
-    origin: (origin, callback) => {
-      const allowedOrigins = [
-        "http://localhost:3000",
-        "https://prismatic-cobbler-92930a.netlify.app",
-        'https://a5-final--prismatic-cobbler-92930a.netlify.app',
-        "https://a6--prismatic-cobbler-92930a.netlify.app"
-      ];
-      console.log("Request origin:", origin);
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('CORS not allowed'));
-      }
-    }
+    origin: [
+      "http://localhost:3000",
+      'https://prismatic-cobbler-92930a.netlify.app',
+      'https://a5-final--prismatic-cobbler-92930a.netlify.app',
+      'https://a6--prismatic-cobbler-92930a.netlify.app'
+    ]
   })
 );
 
