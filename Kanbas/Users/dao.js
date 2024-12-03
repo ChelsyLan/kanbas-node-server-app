@@ -9,7 +9,7 @@ export const findAllUsers = async() => {
 export const findUserByRole = async(role) =>userModel.find({role:role});
 export const findUserById = (userId) =>userModel.findById(userId);
 export const findUserByUsername = (username) =>  userModel.findOne({ username: username });
-export const findUserByCredentials = (username, password) =>  userModel.findOne({ username, password });
+export const findUserByCredentials = async (username, password) => await userModel.findOne({ username, password });
 export const findUsersByPartialName = (partialName) => {
   const regex = new RegExp(partialName, "i"); // 'i' makes it case-insensitive
   return model.find({
