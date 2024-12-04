@@ -80,22 +80,18 @@ export default function UserRoutes(app) {
   const findCoursesForEnrolledUser = async(req, res) => {
     const currentUser = req.session.currentUser;
     if (!currentUser) {
-      console.log("Please sign in first to find course");
       console.log("session when finding course",req.session);
-      return;
     }
-    if (currentUser.role === "ADMIN") {
+    if (currentUser && currentUser.role === "ADMIN") {
       const courses = await courseDao.findAllCourses();
       res.json(courses);
       return;
     }
     let { uid } = req.params;
     console.log("Received uid:", uid);  // Debug log
-    console.log("Current user:", currentUser);  // Debug log
     if (uid === "current" || !uid) {
       uid = currentUser._id;
     }
-    
     const courses = await enrollmentsDao.findCoursesForUser(uid);
     res.json(courses);
   };
